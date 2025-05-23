@@ -162,13 +162,13 @@ public class CopieImage {
     /**
      * Copie pixel par pixel avec noir et blanc(1.3
      */
-    public void copierPalette(String path, Palette palette) {
+    public void copierPalette(String path, Palette palette, String prefix) {
         File file = new File(path);
         if (file.exists()) {
             try {
                 BufferedImage img = ImageIO.read(file);
 
-                File output = new File(file.getParent(), palette.norme.getClass().getName() + "_" + file.getName());
+                File output = new File(file.getParent(), prefix.isEmpty() ? palette.norme.getClass().getName() + "_" + file.getName() : prefix + "_" + file.getName());
 
                 BufferedImage output_img = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
 

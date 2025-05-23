@@ -17,27 +17,6 @@ public class Main {
         for (NormeCouleurs nc : normes) {
             System.out.println("Norme : " + nc.getClass().getName());
 
-            Color[] colors = new Color[256];
-
-            int index = 0;
-            int[] levels = {0, 51, 102, 153, 204, 255};
-
-            for (int r : levels) {
-                for (int g : levels) {
-                    for (int b : levels) {
-                        colors[index++] = new Color(r, g, b);
-                    }
-                }
-            }
-
-            for (int i = 0; i < 40; i++) {
-                int gray = 8 + i * 247 / 39;
-                colors[index++] = new Color(gray, gray, gray);
-            }
-
-            Palette palette = new Palette(colors, nc);
-
-            /*
             Palette palette = new Palette(new Color[]{
                     Color.decode("#03071e"),
                     Color.decode("#6a040f"),
@@ -45,17 +24,17 @@ public class Main {
                     Color.decode("#f48c06"),
                     Color.decode("#ffba08"),
 
+                    /*
 
                     Color.decode("#007f5f"),
                     Color.decode("#55a630"),
                     Color.decode("#aacc00"),
                     Color.decode("#d4d700"),
                     Color.decode("#eeef20"),
-
+                    */
             }, nc);
-            */
 
-            cp.copierPalette("res/fleur.png", palette);
+            cp.copierPalette("res/fleur.png", palette, "");
         }
 
         CompareImage cmp = new CompareImage();

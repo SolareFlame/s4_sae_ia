@@ -5,10 +5,10 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Implémentation simple de HAC (Hierarchical Agglomerative Clustering).
- * Pour illustrer, on propose l'average-linkage et la coupe par nombre de clusters.
+ * Pour comprendre le fonctionnement de l'algorithme, voir la vidéo : https://www.youtube.com/watch?v=8QCBl-xdeZI
  */
 public class HAC implements Clustering {
+
     public enum Linkage {
         SINGLE,
         COMPLETE,
@@ -41,7 +41,7 @@ public class HAC implements Clustering {
             clusters.add(new ArrayList<>(Arrays.asList(i)));
         }
 
-        // Calcul initial de la matrice de distances entre échantillons
+        // Calcul initial de la matrice de distances entre échantillons (tableau de la vidéo)
         double[][] dist = new double[n][n];
         for (int i = 0; i < n; i++) {
             for (int j = i + 1; j < n; j++) {
@@ -91,20 +91,21 @@ public class HAC implements Clustering {
 
     private double clusterDistance(List<Integer> c1, List<Integer> c2,
                                    double[][] data, double[][] distMatrix) {
-        switch (linkage) {
-            case SINGLE:
-                return singleLinkage(c1, c2, distMatrix);
-            case COMPLETE:
-                return completeLinkage(c1, c2, distMatrix);
-            case AVERAGE:
-                return averageLinkage(c1, c2, distMatrix);
-            case CENTROID:
-                return centroidLinkage(c1, c2, data);
-            default:
-                throw new IllegalStateException("Linkage non reconnu");
-        }
+        return switch (linkage) {
+            case SINGLE -> singleLinkage(c1, c2, distMatrix);
+            case COMPLETE -> completeLinkage(c1, c2, distMatrix);
+            case AVERAGE -> averageLinkage(c1, c2, distMatrix);
+            case CENTROID -> centroidLinkage(c1, c2, data);
+            default -> throw new IllegalStateException("Linkage non reconnu");
+        };
     }
 
+    /**
+     * @param c1 1er cluster
+     * @param c2 2ème cluster
+     * @param distMatrix matrice de distances
+     * @return la distance minimum entre ces deux clusters
+     */
     private double singleLinkage(List<Integer> c1, List<Integer> c2, double[][] distMatrix) {
         double min = Double.MAX_VALUE;
         for (int i : c1) {
@@ -115,6 +116,12 @@ public class HAC implements Clustering {
         return min;
     }
 
+    /**
+     * @param c1 1er cluster
+     * @param c2 2ème cluster
+     * @param distMatrix matrice de distances
+     * @return la distance maximum entre ces deux clusters
+     */
     private double completeLinkage(List<Integer> c1, List<Integer> c2, double[][] distMatrix) {
         double max = Double.MIN_VALUE;
         for (int i : c1) {
@@ -125,6 +132,12 @@ public class HAC implements Clustering {
         return max;
     }
 
+    /**
+     * @param c1 1er cluster
+     * @param c2 2ème cluster
+     * @param distMatrix matrice de distances
+     * @return la distance moyenne entre ces deux clusters (distance avec tt ces points)
+     */
     private double averageLinkage(List<Integer> c1, List<Integer> c2, double[][] distMatrix) {
         double sum = 0;
         int count = 0;
@@ -136,6 +149,8 @@ public class HAC implements Clustering {
         }
         return sum / count;
     }
+
+    /* pas encore comprit cette partie */
 
     private double centroidLinkage(List<Integer> c1, List<Integer> c2, double[][] data) {
         double[] mu1 = computeCentroid(c1, data);

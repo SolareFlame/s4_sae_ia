@@ -11,19 +11,16 @@ import java.io.IOException;
 public class Main {
     public static void main(String[] args) throws IOException  {
 
-        File fichierSource = new File("./res/Planete 1.jpg");
+        final String nom_fichier = "./res/Planete 1.jpg";
+        File fichierSource = new File(nom_fichier);
 
         // Vérifier que le fichier source existe
         BufferedImage image = ImageIO.read(fichierSource);
         BufferedImage imageFloue = Gaussien.appliquerFlouGaussien(image, 5, 1.0);
 
-        boolean success = ImageIO.write(imageFloue, "PNG", new File("./res/Planete 1 flou.png"));
+        boolean success = ImageIO.write(imageFloue, "PNG", new File(nom_fichier));
 
-        if (success) {
-            System.out.println("Image floue générée avec succès : " + "./res/Planete 1 flou.png");
-        } else {
-            System.out.println("Échec de l'écriture de l'image");
-        }
+        System.out.println(success ? "Image floue générée avec succès : " + nom_fichier : "Échec de l'écriture de l'image");
 
         // Exemple de données factices
         double[][] X = new double[100][2];
@@ -38,9 +35,9 @@ public class Main {
         System.out.println("Labels KMeans : " + java.util.Arrays.toString(labelsKm));
 
         // DBSCAN
-        Clustering db = new DbScan(0.3, 5);
+/*        Clustering db = new DbScan(0.3, 5);
         int[] labelsDb = db.calculer(X);
-        System.out.println("Labels DBSCAN : " + java.util.Arrays.toString(labelsDb));
+        System.out.println("Labels DBSCAN : " + java.util.Arrays.toString(labelsDb));*/
 
         // HAC
         Clustering hac = new HAC(HAC.Linkage.AVERAGE, 3);

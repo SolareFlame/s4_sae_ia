@@ -1,3 +1,5 @@
+package algo;
+
 public interface Clustering {
 
     /**
@@ -6,5 +8,5 @@ public interface Clustering {
      * @param data tableau de taille Nobjet x Ncarac représentant les objets à classer
      * @return tableau de taille Nobjet contenant le numéro de cluster attribué à chaque objet
      */
-    int[] assignerClusters(double[][] data);
+    int[] calculer(double[][] data);
 }

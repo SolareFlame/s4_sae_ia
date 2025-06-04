@@ -24,10 +24,21 @@ public static void main() throws IOException {
     System.out.println(success ? "Image floue générée avec succès : " + cheminImageFloue : "Échec de l'écriture de l'image");
 
     // Exemple de données factices
-    double[][] X = new double[100][2];
-    for (int i = 0; i < 100; i++) {
-        X[i][0] = Math.random();
-        X[i][1] = Math.random();
+    double[][] X = new double[100][3];
+    for (int i = 0; i < 70; i++) { // Bleu
+        X[i][0] = 0; // Rouge
+        X[i][1] = 0; // Vert
+        X[i][2] = 255; // Bleu
+    }
+    for (int i = 70; i < 85; i++) { // Vert
+        X[i][0] = 0; // Rouge
+        X[i][1] = 255; // Vert
+        X[i][2] = 0; // Bleu
+    }
+    for (int i = 85; i < 100; i++) { // Rouge
+        X[i][0] = 255; // Rouge
+        X[i][1] = 0; // Vert
+        X[i][2] = 0; // Bleu
     }
 
     // KMeans
@@ -44,4 +55,12 @@ public static void main() throws IOException {
     Clustering hac = new HAC(HAC.Linkage.AVERAGE, 3);
     int[] labelsHac = hac.calculer(X);
     System.out.println("Labels HAC : " + java.util.Arrays.toString(labelsHac));
+
+
+
+
+
+
+
+
 }

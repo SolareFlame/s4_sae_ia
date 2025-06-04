@@ -21,7 +21,7 @@ public static void main() throws IOException {
 
     boolean success = ImageIO.write(imageFloue, "PNG", new File(cheminImageFloue));
 
-    System.out.println(success ? "Image floue générée avec succès : " + cheminImageFloue: "Échec de l'écriture de l'image");
+    System.out.println(success ? "Image floue générée avec succès : " + cheminImageFloue : "Échec de l'écriture de l'image");
 
     // Exemple de données factices
     double[][] X = new double[100][2];
@@ -35,14 +35,13 @@ public static void main() throws IOException {
     int[] labelsKm = km.calculer(X);
     System.out.println("Labels KMeans : " + java.util.Arrays.toString(labelsKm));
 
-        // DBSCAN
-/*        Clustering db = new DbScan(0.3, 5);
-        int[] labelsDb = db.calculer(X);
-        System.out.println("Labels DBSCAN : " + java.util.Arrays.toString(labelsDb));*/
+    // DBSCAN
+/*  Clustering db = new DbScan(0.3, 5);
+    int[] labelsDb = db.calculer(X);
+    System.out.println("Labels DBSCAN : " + java.util.Arrays.toString(labelsDb));*/
 
-        // HAC
-        Clustering hac = new HAC(HAC.Linkage.AVERAGE, 3);
-        int[] labelsHac = hac.calculer(X);
-        System.out.println("Labels HAC : " + java.util.Arrays.toString(labelsHac));
-    }
+    // HAC
+    Clustering hac = new HAC(HAC.Linkage.AVERAGE, 3);
+    int[] labelsHac = hac.calculer(X);
+    System.out.println("Labels HAC : " + java.util.Arrays.toString(labelsHac));
 }

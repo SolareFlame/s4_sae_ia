@@ -1,1 +1,5 @@
-# s4_sae_ia
+# SAE S4 IA (EXO PLANETES)
+
+- HEUERTZ Zacharie
+- KNORST Valentin
+- MEYER Quentin

@@ -7,18 +7,21 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) throws IOException  {
+        String cheminImageFloue = "./res/Image floue.png";
 
         final String planete1 = "./res/Planete 1.jpg";
         final String planete2 = "./res/Planete 2.jpg";
         final String planete3 = "./res/Planete 3.jpg";
         final String planete4 = "./res/Planete 4.jpg";
         final String planete5 = "./res/Planete 5.jpg";
-        
+
         final String fichier_choisie = planete1;
-        
+
         File fichierSource = new File(fichier_choisie);
 
         // Vérifier que le fichier source existe
@@ -35,6 +38,24 @@ public class Main {
             data[i][0] = Math.random();
             data[i][1] = Math.random();
             data[i][2] = Math.random();
+        }
+
+        // Exemple de données factices
+        double[][] X = new double[100][3];
+        for (int i = 0; i < 70; i++) { // Bleu
+            X[i][0] = 0; // Rouge
+            X[i][1] = 0; // Vert
+            X[i][2] = 255; // Bleu
+        }
+        for (int i = 70; i < 85; i++) { // Vert
+            X[i][0] = 0; // Rouge
+            X[i][1] = 255; // Vert
+            X[i][2] = 0; // Bleu
+        }
+        for (int i = 85; i < 100; i++) { // Rouge
+            X[i][0] = 255; // Rouge
+            X[i][1] = 0; // Vert
+            X[i][2] = 0; // Bleu
         }
 
         // KMeans

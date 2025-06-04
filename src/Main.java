@@ -58,8 +58,8 @@ public static void main() throws IOException {
     int[] labelsHac = hac.calculer(X);
     System.out.println("Labels HAC : " + java.util.Arrays.toString(labelsHac));
 
-    ArrayList<int[]> palette = PaletteBrute.extrairePalette("./res/test.png");
-    for (int[] rgb : palette) {
+    double[][] palette = PaletteBrute.extrairePalette("./res/test.png");
+    for (double[] rgb : palette) {
         System.out.println(Arrays.toString(rgb));
     }
 }

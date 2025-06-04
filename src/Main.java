@@ -8,16 +8,15 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-public class Main {
-    public static void main(String[] args) throws IOException  {
+public static void main() throws IOException {
+    File fichierSource = new File("./res/Planete 1.jpg");
 
-        File fichierSource = new File("./res/Planete 1.jpg");
+    // Vérifier que le fichier source existe
 
-        // Vérifier que le fichier source existe
-        BufferedImage image = ImageIO.read(fichierSource);
-        BufferedImage imageFloue = Gaussien.appliquerFlouGaussien(image, 5, 1.0);
+    BufferedImage image = ImageIO.read(fichierSource);
+    BufferedImage imageFloue = Gaussien.appliquerFlouGaussien(image, 5, 1.0);
 
-        boolean success = ImageIO.write(imageFloue, "PNG", new File("./res/Planete 1 flou.png"));
+    boolean success = ImageIO.write(imageFloue, "PNG", new File("./res/Planete 1 flou.png"));
 
         if (success) {
             System.out.println("Image floue générée avec succès : " + "./res/Planete 1 flou.png");
@@ -46,5 +45,4 @@ public class Main {
         Clustering hac = new HAC(HAC.Linkage.AVERAGE, 3);
         int[] labelsHac = hac.calculer(X);
         System.out.println("Labels HAC : " + java.util.Arrays.toString(labelsHac));
-    }
 }

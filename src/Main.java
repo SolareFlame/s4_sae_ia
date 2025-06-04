@@ -41,38 +41,38 @@ public class Main {
         }
 
         // Exemple de données factices
-        double[][] X = new double[100][3];
+        double[][] data2 = new double[100][3];
         for (int i = 0; i < 70; i++) { // Bleu
-            X[i][0] = 0; // Rouge
-            X[i][1] = 0; // Vert
-            X[i][2] = 255; // Bleu
+            data2[i][0] = 0; // Rouge
+            data2[i][1] = 0; // Vert
+            data2[i][2] = 255; // Bleu
         }
         for (int i = 70; i < 85; i++) { // Vert
-            X[i][0] = 0; // Rouge
-            X[i][1] = 255; // Vert
-            X[i][2] = 0; // Bleu
+            data2[i][0] = 0; // Rouge
+            data2[i][1] = 255; // Vert
+            data2[i][2] = 0; // Bleu
         }
         for (int i = 85; i < 100; i++) { // Rouge
-            X[i][0] = 255; // Rouge
-            X[i][1] = 0; // Vert
-            X[i][2] = 0; // Bleu
+            data2[i][0] = 255; // Rouge
+            data2[i][1] = 0; // Vert
+            data2[i][2] = 0; // Bleu
         }
 
         // KMeans
         Clustering km = new KMeans(3, 100);
-        int[] labelsKm = km.calculer(data);
+        int[] labelsKm = km.calculer(data2);
         System.out.println("Labels KMeans : " + java.util.Arrays.toString(labelsKm));
 
         // DBSCAN
         /*
         Clustering db = new DbScan(0.3, 5);
-        int[] labelsDb = db.calculer(data);
+        int[] labelsDb = db.calculer(data2);
         System.out.println("Labels DBSCAN : " + java.util.Arrays.toString(labelsDb));
         */
 
         // HAC
         Clustering hac = new HAC(HAC.Linkage.AVERAGE, 15);
-        int[] labelsHac = hac.calculer(data);
+        int[] labelsHac = hac.calculer(data2);
         System.out.println("Labels HAC : " + java.util.Arrays.toString(labelsHac));
     }
 }

@@ -9,40 +9,39 @@ import java.io.File;
 import java.io.IOException;
 
 public static void main() throws IOException {
-    File fichierSource = new File("./res/Planete 1.jpg");
+    String cheminImage = "./res/Planete 1.jpg";
+    String cheminImageFloue = "./res/Image floue.png";
+
+    File fichierSource = new File(cheminImage);
 
     // Vérifier que le fichier source existe
 
     BufferedImage image = ImageIO.read(fichierSource);
     BufferedImage imageFloue = Gaussien.appliquerFlouGaussien(image, 5, 1.0);
 
-    boolean success = ImageIO.write(imageFloue, "PNG", new File("./res/Planete 1 flou.png"));
+    boolean success = ImageIO.write(imageFloue, "PNG", new File(cheminImageFloue));
 
-        if (success) {
-            System.out.println("Image floue générée avec succès : " + "./res/Planete 1 flou.png");
-        } else {
-            System.out.println("Échec de l'écriture de l'image");
-        }
+    System.out.println(success ? "Image floue générée avec succès : " + cheminImageFloue: "Échec de l'écriture de l'image");
 
-        // Exemple de données factices
-        double[][] X = new double[100][2];
-        for (int i = 0; i < 100; i++) {
-            X[i][0] = Math.random();
-            X[i][1] = Math.random();
-        }
+    // Exemple de données factices
+    double[][] X = new double[100][2];
+    for (int i = 0; i < 100; i++) {
+        X[i][0] = Math.random();
+        X[i][1] = Math.random();
+    }
 
-        // KMeans
-        Clustering km = new KMeans(3, 100);
-        int[] labelsKm = km.calculer(X);
-        System.out.println("Labels KMeans : " + java.util.Arrays.toString(labelsKm));
+    // KMeans
+    Clustering km = new KMeans(3, 100);
+    int[] labelsKm = km.calculer(X);
+    System.out.println("Labels KMeans : " + java.util.Arrays.toString(labelsKm));
 
-        // DBSCAN
-        Clustering db = new DbScan(0.3, 5);
-        int[] labelsDb = db.calculer(X);
-        System.out.println("Labels DBSCAN : " + java.util.Arrays.toString(labelsDb));
+    // DBSCAN
+    Clustering db = new DbScan(0.3, 5);
+    int[] labelsDb = db.calculer(X);
+    System.out.println("Labels DBSCAN : " + java.util.Arrays.toString(labelsDb));
 
-        // HAC
-        Clustering hac = new HAC(HAC.Linkage.AVERAGE, 3);
-        int[] labelsHac = hac.calculer(X);
-        System.out.println("Labels HAC : " + java.util.Arrays.toString(labelsHac));
+    // HAC
+    Clustering hac = new HAC(HAC.Linkage.AVERAGE, 3);
+    int[] labelsHac = hac.calculer(X);
+    System.out.println("Labels HAC : " + java.util.Arrays.toString(labelsHac));
 }

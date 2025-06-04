@@ -3,8 +3,28 @@ import algo.DbScan;
 import algo.HAC;
 import algo.KMeans;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException  {
+
+        File fichierSource = new File("./res/Planete 1.jpg");
+
+        // Vérifier que le fichier source existe
+        BufferedImage image = ImageIO.read(fichierSource);
+        BufferedImage imageFloue = Gaussien.appliquerFlouGaussien(image, 5, 1.0);
+
+        boolean success = ImageIO.write(imageFloue, "PNG", new File("./res/Planete 1 flou.png"));
+
+        if (success) {
+            System.out.println("Image floue générée avec succès : " + "./res/Planete 1 flou.png");
+        } else {
+            System.out.println("Échec de l'écriture de l'image");
+        }
+
         // Exemple de données factices
         double[][] X = new double[100][2];
         for (int i = 0; i < 100; i++) {

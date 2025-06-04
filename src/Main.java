@@ -35,13 +35,14 @@ public static void main() throws IOException {
     int[] labelsKm = km.calculer(X);
     System.out.println("Labels KMeans : " + java.util.Arrays.toString(labelsKm));
 
-    // DBSCAN
-    Clustering db = new DbScan(0.3, 5);
-    int[] labelsDb = db.calculer(X);
-    System.out.println("Labels DBSCAN : " + java.util.Arrays.toString(labelsDb));
+        // DBSCAN
+/*        Clustering db = new DbScan(0.3, 5);
+        int[] labelsDb = db.calculer(X);
+        System.out.println("Labels DBSCAN : " + java.util.Arrays.toString(labelsDb));*/
 
-    // HAC
-    Clustering hac = new HAC(HAC.Linkage.AVERAGE, 3);
-    int[] labelsHac = hac.calculer(X);
-    System.out.println("Labels HAC : " + java.util.Arrays.toString(labelsHac));
+        // HAC
+        Clustering hac = new HAC(HAC.Linkage.AVERAGE, 3);
+        int[] labelsHac = hac.calculer(X);
+        System.out.println("Labels HAC : " + java.util.Arrays.toString(labelsHac));
+    }
 }

@@ -7,6 +7,8 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public static void main() throws IOException {
     String cheminImage = "./res/Planete 1.jpg";
@@ -44,4 +46,9 @@ public static void main() throws IOException {
     Clustering hac = new HAC(HAC.Linkage.AVERAGE, 3);
     int[] labelsHac = hac.calculer(X);
     System.out.println("Labels HAC : " + java.util.Arrays.toString(labelsHac));
+
+    ArrayList<int[]> palette = PaletteBrute.extrairePalette("./res/test.png");
+    for (int[] rgb : palette) {
+        System.out.println(Arrays.toString(rgb));
+    }
 }

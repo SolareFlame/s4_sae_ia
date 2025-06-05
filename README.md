@@ -1,6 +1,6 @@
 # s4_sae_ia
 
-## Menbres
+## Membres
 - Valentin KNORST
 - Zacharie HEUERTZ
 - Quentin MEIER

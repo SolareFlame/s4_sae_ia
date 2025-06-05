@@ -1,76 +1,108 @@
 import algo.Clustering;
-import algo.DbScan;
-import algo.HAC;
 import algo.KMeans;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-class Main {
-    public static void main(String[] args) throws IOException {
-        String cheminImageFloue = "./res/Image floue.png";
+static int[] MAPCOLORS = {
+        0x8B0000,  // DarkRed
+        0x006400,  // DarkGreen
+        0x00008B,  // DarkBlue
+        0x8B008B,  // DarkMagenta
+        0x808000,  // Olive
+        0xFF4500,  // OrangeRed
+        0x2E8B57,  // SeaGreen
+        0x4682B4,  // SteelBlue
+};
 
-        final String planete1 = "./res/Planete 1.jpg";
-        final String planete2 = "./res/Planete 2.jpg";
-        final String planete3 = "./res/Planete 3.jpg";
-        final String planete4 = "./res/Planete 4.jpg";
-        final String planete5 = "./res/Planete 5.jpg";
 
-        final String fichier_choisi = planete1;
 
-        File fichierSource = new File(fichier_choisi);
+public static void main(String[] args) throws IOException {
+    String cheminImage = "./res/Planete 1.jpg";
+    String cheminImageFloue = "./res/Image_floue.png";
+    int nb_cluster_biomes = 5;
+    int nb_cluster_regions = 5;
 
-        // Vérifier que le fichier source existe
-        BufferedImage image = ImageIO.read(fichierSource);
-        BufferedImage imageFloue = Gaussien.appliquerFlouGaussien(image, 5, 1.0);
+    // FLOU GAUSSIEN
+    File fichierSource = new File(cheminImage);
+    BufferedImage image = ImageIO.read(fichierSource);
+    BufferedImage imageFloue = Gaussien.appliquerFlouGaussien(image, 5, 1.0);
 
-        boolean success = ImageIO.write(imageFloue, "PNG", new File(cheminImageFloue));
+    int largeur = imageFloue.getWidth();
+    int hauteur = imageFloue.getHeight();
 
-        System.out.println(success ? "Image floue générée avec succès : " + fichier_choisi : "Échec de l'écriture de l'image");
 
-        // Exemple de données factices
-        double[][] data = new double[100][3];
-        for (int i = 0; i < 100; i++) {
-            data[i][0] = Math.random();
-            data[i][1] = Math.random();
-            data[i][2] = Math.random();
-        }
+    boolean success = ImageIO.write(imageFloue, "PNG", new File(cheminImageFloue));
+    System.out.println(success ? "Image floue générée avec succès : " + cheminImageFloue : "Échec de l'écriture de l'image");
 
-        // Exemple de données factices
-        double[][] data2 = new double[100][3];
-        for (int i = 0; i < 70; i++) { // Bleu
-            data2[i][0] = 0; // Rouge
-            data2[i][1] = 0; // Vert
-            data2[i][2] = 255; // Bleu
-        }
-        for (int i = 70; i < 85; i++) { // Vert
-            data2[i][0] = 0; // Rouge
-            data2[i][1] = 255; // Vert
-            data2[i][2] = 0; // Bleu
-        }
-        for (int i = 85; i < 100; i++) { // Rouge
-            data2[i][0] = 255; // Rouge
-            data2[i][1] = 0; // Vert
-            data2[i][2] = 0; // Bleu
-        }
+    // EXTRACTION DE LA PALETTE
+    double[][] palette;
+    palette = PaletteBrute.extrairePalette(cheminImageFloue);
 
-        // KMeans
-        Clustering km = new KMeans(3, 100);
-        int[] labelsKm = km.calculer(data2);
-        System.out.println("Labels KMeans : " + java.util.Arrays.toString(labelsKm));
+    // EXTRACTION DES BIOMES
+    Clustering km = new KMeans(nb_cluster_biomes, 100);
+    int[] labels_km = km.calculer(palette);
+    System.out.println("DATA SIZE: " + palette.length);
 
-        // DBSCAN
-        /*
-        Clustering db = new DbScan(0.3, 5);
-        int[] labelsDb = db.calculer(data2);
-        System.out.println("Labels DBSCAN : " + java.util.Arrays.toString(labelsDb));
-        */
-
-        // HAC
-        Clustering hac = new HAC(HAC.Linkage.AVERAGE, 15);
-        int[] labelsHac = hac.calculer(data2);
-        System.out.println("Labels HAC : " + java.util.Arrays.toString(labelsHac));
+    List<double[]>[] biomeLists = new ArrayList[nb_cluster_biomes];
+    for (int i = 0; i < nb_cluster_biomes; i++) {
+        biomeLists[i] = new ArrayList<>();
     }
+
+    for (int i = 0; i < labels_km.length; i++) {
+        if (i % 5000 == 0) {
+            System.out.println("Pourcentage de progression: " + (i * 100 / labels_km.length) + "%");
+        }
+
+        int biome_index = labels_km[i];
+        double[] coords = new double[] { i % largeur, i / largeur };
+        biomeLists[biome_index].add(coords);
+    }
+
+    double[][][] biomes = new double[nb_cluster_biomes][][];
+    for (int i = 0; i < nb_cluster_biomes; i++) {
+        biomes[i] = biomeLists[i].toArray(new double[0][0]);
+    }
+
+    System.out.println("FINI L'EXTRACTION DES BIOMES");
+
+
+    // GENERATION DES COULEURS DE REGIONS
+    // n-1 varations des couleurs des biomes pour les n régions (n = nb_cluster_regions)
+
+    BufferedImage rendu_final = new BufferedImage(largeur, hauteur, BufferedImage.TYPE_INT_RGB);
+
+    for (int i = 0; i < biomes.length; i++) {
+        System.out.println("BIOME " + i + " : " + biomes[i].length + " pixels");
+
+        if (biomes[i] == null || biomes[i].length == 0) continue;
+
+        Clustering clustering = new KMeans(nb_cluster_regions, 1000); //new HAC(HAC.Linkage.AVERAGE, nb_cluster_regions);
+        int[] regions = clustering.calculer(biomes[i]);
+
+        int biome_color = PaletteBrute.getAverageColor(imageFloue, biomes[i]);
+        int[] regions_colors = PaletteBrute.genColorVariations(biome_color, nb_cluster_regions);
+
+        for (int j = 0; j < biomes[i].length; j++) {
+            int x = (int) biomes[i][j][0];
+            int y = (int) biomes[i][j][1];
+
+            int region_index = regions[j];
+
+            rendu_final.setRGB(x, y, regions_colors[region_index]);
+        }
+    }
+
+    File output = new File("./res/regions_output.png");
+    ImageIO.write(rendu_final, "PNG", output);
+    System.out.println("Image des régions créée : " + output.getPath());
 }
+
+
+
+

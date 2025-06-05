@@ -45,7 +45,7 @@ public class HAC implements Clustering {
         double[][] dist = new double[n][n];
         for (int i = 0; i < n; i++) {
             for (int j = i + 1; j < n; j++) {
-                double d = euclideanDistance(data[i], data[j]);
+                double d = distanceEuclidienne(data[i], data[j]);
                 dist[i][j] = d;
                 dist[j][i] = d;
             }
@@ -58,7 +58,7 @@ public class HAC implements Clustering {
             double bestDist = Double.MAX_VALUE;
             for (int a = 0; a < clusters.size(); a++) {
                 for (int b = a + 1; b < clusters.size(); b++) {
-                    double dAB = clusterDistance(clusters.get(a), clusters.get(b), data, dist);
+                    double dAB = distanceClusters(clusters.get(a), clusters.get(b), data, dist);
                     if (dAB < bestDist) {
                         bestDist = dAB;
                         ci = a; cj = b;
@@ -80,7 +80,7 @@ public class HAC implements Clustering {
         return labels;
     }
 
-    private double euclideanDistance(double[] a, double[] b) {
+    private double distanceEuclidienne(double[] a, double[] b) {
         double sum = 0;
         for (int i = 0; i < a.length; i++) {
             double diff = a[i] - b[i];
@@ -89,8 +89,8 @@ public class HAC implements Clustering {
         return Math.sqrt(sum);
     }
 
-    private double clusterDistance(List<Integer> c1, List<Integer> c2,
-                                   double[][] data, double[][] distMatrix) {
+    private double distanceClusters(List<Integer> c1, List<Integer> c2,
+                                    double[][] data, double[][] distMatrix) {
         return switch (linkage) {
             case SINGLE -> singleLinkage(c1, c2, distMatrix);
             case COMPLETE -> completeLinkage(c1, c2, distMatrix);
@@ -153,12 +153,12 @@ public class HAC implements Clustering {
     /* pas encore comprit cette partie */
 
     private double centroidLinkage(List<Integer> c1, List<Integer> c2, double[][] data) {
-        double[] mu1 = computeCentroid(c1, data);
-        double[] mu2 = computeCentroid(c2, data);
-        return euclideanDistance(mu1, mu2);
+        double[] mu1 = calculerCentre(c1, data);
+        double[] mu2 = calculerCentre(c2, data);
+        return distanceEuclidienne(mu1, mu2);
     }
 
-    private double[] computeCentroid(List<Integer> cluster, double[][] data) {
+    private double[] calculerCentre(List<Integer> cluster, double[][] data) {
         int dim = data[0].length;
         double[] mu = new double[dim];
         for (int idx : cluster) {

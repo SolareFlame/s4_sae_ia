@@ -13,9 +13,10 @@ public class Gaussien {
         BufferedImage resultat = new BufferedImage(largeur, hauteur, BufferedImage.TYPE_INT_ARGB);
 
         // Application du "filtre de convolution"
-        for (int y = rayon; y < hauteur - rayon; y++) {
-            for (int x = rayon; x < largeur - rayon; x++) {
+        for (int y = 0; y < hauteur; y++) {
+            for (int x = 0; x < largeur; x++) {
                 float rouge = 0, vert = 0, bleu = 0, alpha = 0;
+                float sommePoidsUtilises = 0;
 
                 // Parcours du noyau
                 for (int ny = 0; ny < taille; ny++) {
@@ -23,18 +24,29 @@ public class Gaussien {
                         int px = x + nx - rayon;
                         int py = y + ny - rayon;
 
-                        int rgb = source.getRGB(px, py);
-                        float poids = noyau[ny * taille + nx];
+                        // Vérifier les limites de l'image
+                        if (px >= 0 && px < largeur && py >= 0 && py < hauteur) {
+                            int rgb = source.getRGB(px, py);
+                            float poids = noyau[ny * taille + nx];
 
-                        alpha += ((rgb >> 24) & 0xFF) * poids;
-                        rouge += ((rgb >> 16) & 0xFF) * poids;
-                        vert  += ((rgb >> 8)  & 0xFF) * poids;
-                        bleu  += (rgb & 0xFF) * poids;
+                            alpha += ((rgb >> 24) & 0xFF) * poids;
+                            rouge += ((rgb >> 16) & 0xFF) * poids;
+                            vert += ((rgb >> 8) & 0xFF) * poids;
+                            bleu += (rgb & 0xFF) * poids;
+                            sommePoidsUtilises += poids;
+                        }
                     }
                 }
 
-                int rgbFlou = ((int)alpha << 24) | ((int)rouge << 16) |
-                        ((int)vert << 8) | (int)bleu;
+                if (sommePoidsUtilises > 0) {
+                    alpha /= sommePoidsUtilises;
+                    rouge /= sommePoidsUtilises;
+                    vert /= sommePoidsUtilises;
+                    bleu /= sommePoidsUtilises;
+                }
+
+                int rgbFlou = ((int) alpha << 24) | ((int) rouge << 16) |
+                        ((int) vert << 8) | (int) bleu;
                 resultat.setRGB(x, y, rgbFlou);
             }
         }

@@ -8,13 +8,9 @@ public class DBSCAN implements Clustering {
     private final double eps;
     private final int minPts;
 
-    /**
-     * @param eps rayon de voisinage
-     * @param minPts nombre minimal de points pour former un cluster dense
-     */
     public DBSCAN(double eps, int minPts) {
         this.eps = eps;
-        this.minPts = minPts;
+        this.minPts = Math.max(minPts, 1);
     }
 
     @Override
@@ -31,10 +27,10 @@ public class DBSCAN implements Clustering {
             List<Integer> neighbors = regionQuery(data, i);
 
             if (neighbors.size() < minPts) {
-                labels[i] = -1; // Marquer comme bruit
+                labels[i] = -1;
             } else {
-                clusterId++;
                 expandCluster(data, i, neighbors, labels, visited, clusterId);
+                clusterId++; // Les IDs commencent à 0 maintenant
             }
         }
         return labels;
@@ -67,14 +63,14 @@ public class DBSCAN implements Clustering {
     private List<Integer> regionQuery(double[][] data, int index) {
         List<Integer> neighbors = new ArrayList<>();
         for (int i = 0; i < data.length; i++) {
-            if (i != index && distance(data[index], data[i]) <= eps) {
+            if (i != index && distanceEuclidienne(data[index], data[i]) <= eps) {
                 neighbors.add(i);
             }
         }
         return neighbors;
     }
 
-    private double distance(double[] a, double[] b) {
+    private double distanceEuclidienne(double[] a, double[] b) {
         double sum = 0;
         for (int i = 0; i < a.length; i++) {
             sum += Math.pow(a[i] - b[i], 2);

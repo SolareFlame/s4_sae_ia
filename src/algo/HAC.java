@@ -150,7 +150,7 @@ public class HAC implements Clustering {
         return sum / count;
     }
 
-    /* pas encore comprit cette partie */
+    /* ici moitié kmeans moitié HAC */
 
     private double centroidLinkage(List<Integer> c1, List<Integer> c2, double[][] data) {
         double[] mu1 = calculerCentre(c1, data);

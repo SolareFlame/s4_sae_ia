@@ -30,6 +30,7 @@ public class PaletteBrute {
 
     public static int getAverageColor(BufferedImage image, double[][] coords) {
         long sumR = 0, sumG = 0, sumB = 0;
+
         for (double[] coord : coords) {
             int x = (int) coord[0];
             int y = (int) coord[1];

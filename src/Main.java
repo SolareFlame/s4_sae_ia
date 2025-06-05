@@ -1,7 +1,4 @@
-import algo.Clustering;
-import algo.KMeans;
-import algo.HAC;
-import algo.EnhancedHAC;
+import algo.*;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -13,22 +10,10 @@ import java.util.List;
 
 
 class Main {
-
-    static int[] MAPCOLORS = {
-            0x8B0000,  // DarkRed
-            0x006400,  // DarkGreen
-            0x00008B,  // DarkBlue
-            0x8B008B,  // DarkMagenta
-            0x808000,  // Olive
-            0xFF4500,  // OrangeRed
-            0x2E8B57,  // SeaGreen
-            0x4682B4,  // SteelBlue
-    };
-
     public static void main(String[] args) throws IOException {
-        String cheminImage = "./res/Planete_1_reduce3.jpg";
+        String cheminImage = "./res/Planete 1.jpg";
         String cheminImageFloue = "./res/Image_floue.png";
-        int nb_cluster_biomes = 5;
+        int nb_cluster_biomes = 15;
         int nb_cluster_regions = 5;
 
         // FLOU GAUSSIEN
@@ -48,7 +33,7 @@ class Main {
         palette = PaletteBrute.extrairePalette(cheminImageFloue);
 
         // EXTRACTION DES BIOMES
-        Clustering km = new KMeans(nb_cluster_biomes, 100);
+        Clustering km = new KMeans(nb_cluster_biomes, 1000);
         int[] labels_km = km.calculer(palette);
         System.out.println("DATA SIZE: " + palette.length);
 
@@ -81,11 +66,13 @@ class Main {
         BufferedImage rendu_final = new BufferedImage(largeur, hauteur, BufferedImage.TYPE_INT_RGB);
 
         for (int i = 0; i < biomes.length; i++) {
+            BufferedImage rendu_region = new BufferedImage(largeur, hauteur, BufferedImage.TYPE_INT_RGB);
+
             System.out.println("BIOME " + i + " : " + biomes[i].length + " pixels");
 
             if (biomes[i] == null || biomes[i].length == 0) continue;
 
-            Clustering clustering = new EnhancedHAC(EnhancedHAC.Linkage.AVERAGE, nb_cluster_regions); //new KMeans(nb_cluster_regions, 1000);
+            Clustering clustering = new KMeans(nb_cluster_biomes, 1000);
             int[] regions = clustering.calculer(biomes[i]);
 
             int biome_color = PaletteBrute.getAverageColor(imageFloue, biomes[i]);
@@ -97,8 +84,18 @@ class Main {
 
                 int region_index = regions[j];
 
+                if (region_index < 0 || region_index >= regions_colors.length) {
+                    System.out.println("Index de région invalide : " + region_index + " pour le pixel (" + x + ", " + y + ")");
+                    continue;
+                }
+
                 rendu_final.setRGB(x, y, regions_colors[region_index]);
+                rendu_region.setRGB(x, y, regions_colors[region_index]);
             }
+
+            File output = new File("./res/regions_output_"+i+".png");
+            ImageIO.write(rendu_region, "PNG", output);
+            System.out.println("Image des région créée : " + output.getPath());
         }
 
         File output = new File("./res/regions_output.png");

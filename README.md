@@ -1,2 +1,6 @@
 # s4_sae_ia
-first push
+
+## Menbres
+- Valentin KNORST
+- Zacharie HEUERTZ
+- Quentin MEIER
